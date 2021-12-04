@@ -1,0 +1,24 @@
+[Unit]
+Description=rclone mega
+AssertPathIsDirectory=/Mega
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount mega: /Mega \
+--umask 0000 \
+--default-permissions \
+--allow-other \
+--allow-non-empty \
+--buffer-size 128M \
+--dir-cache-time 1h \
+--vfs-cache-mode writes \
+--vfs-read-chunk-size 256M \
+--vfs-read-chunk-size-limit 8G
+ExecStop=/usr/bin/fusermount -qzu /Mega
+Restart=on-abort
+User=root
+
+
+[Install]
+WantedBy=multi-user.target
